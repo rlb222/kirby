@@ -11,31 +11,20 @@
 </template>
 
 <script>
-import SectionMixin from "@/mixins/section/section.js";
-
 export default {
-  mixins: [SectionMixin],
-  data() {
-    return {
-      headline: null,
-      text: null,
-      theme: null
-    };
-  },
-  created() {
-    this.load()
-      .then(response => {
-        this.headline = response.options.headline;
-        this.text     = response.options.text;
-        this.theme    = response.options.theme || "info";
-      });
+  props: {
+    headline: String,
+    text: String,
+    theme: {
+      type: String,
+      default: "info"
+    }
   }
 };
 </script>
-<style>
 
+<style>
 .k-info-section-headline {
   margin-block-end: .5rem;
 }
-
 </style>

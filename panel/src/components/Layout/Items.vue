@@ -6,7 +6,6 @@
     :options="dragOptions"
     :data-layout="layout"
     :data-size="size"
-    :list="items"
     @change="$emit('change', $event)"
     @end="$emit('sort', items, $event)"
   >

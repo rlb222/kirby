@@ -6,8 +6,8 @@
       :size="size"
       :sortable="sortable"
       @option="onOption"
-      @sort="$emit('sort', $event)"
-      @change="$emit('change', $event)"
+      @sort="onSort"
+      @change="onChange"
     />
 
     <footer v-if="hasFooter" class="k-collection-footer">
@@ -112,15 +112,16 @@ export default {
       };
     }
   },
-  watch: {
-    $props() {
-      this.$forceUpdate();
-    }
-  },
   methods: {
+    onChange(...args) {
+      this.$emit("change", ...args);
+    },
     onOption(...args) {
       this.$emit("action", ...args);
       this.$emit("option", ...args);
+    },
+    onSort(...args) {
+      this.$emit("sort", ...args);
     }
   }
 };

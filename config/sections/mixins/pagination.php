@@ -10,11 +10,19 @@ return [
         'limit' => function (int $limit = 20) {
             return $limit;
         },
-        /**
-         * Sets the default page for the pagination. This will overwrite default pagination.
-         */
-        'page' => function (int $page = null) {
-            return get('page', $page);
+    ],
+    'computed' => [
+        'page' => function () {
+            $session = $this->kirby()->session();
+            $id      = $this->model()->panel()->url(true) . '/' . $this->name;
+
+            if ($page = (get($this->name)['page'] ?? null)) {
+                $session->set($id . '[page]', $page);
+            } else {
+                $page = $session->get($id . '[page]', 1);
+            }
+
+            return $page;
         },
     ],
     'methods' => [

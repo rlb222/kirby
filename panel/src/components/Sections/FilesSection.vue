@@ -1,9 +1,5 @@
 <template>
-  <section
-    v-if="isLoading === false"
-    :data-processing="isProcessing"
-    class="k-files-section"
-  >
+  <section class="k-files-section">
     <header class="k-section-header">
       <k-headline>
         {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
@@ -15,21 +11,12 @@
       </k-button-group>
     </header>
 
-    <template v-if="error">
-      <k-box theme="negative">
-        <k-text size="small">
-          <strong>{{ $t("error.section.notLoaded", {name: name}) }}:</strong>
-          {{ error }}
-        </k-text>
-      </k-box>
-    </template>
-
-    <template v-else>
+    <template>
       <k-dropzone :disabled="add === false" @drop="drop">
         <k-collection
           v-if="data.length"
           :help="help"
-          :items="data"
+          :items="items(data)"
           :layout="options.layout"
           :pagination="pagination"
           :sortable="!isProcessing && options.sortable"
@@ -61,7 +48,7 @@
         </template>
       </k-dropzone>
 
-      <k-upload ref="upload" @success="uploaded" @error="reload" />
+      <k-upload ref="upload" @success="$reload" @error="$reload" />
     </template>
   </section>
 </template>
@@ -79,15 +66,6 @@ export default {
         return false;
       }
     },
-  },
-  created() {
-    this.load();
-    this.$events.$on("model.update", this.reload);
-    this.$events.$on("file.sort", this.reload);
-  },
-  destroyed() {
-    this.$events.$off("model.update", this.reload);
-    this.$events.$off("file.sort", this.reload);
   },
   methods: {
     action(action, file) {
@@ -161,7 +139,6 @@ export default {
         this.$events.$emit("file.sort");
 
       } catch (error) {
-        this.reload();
         this.$store.dispatch("notification/error", error.message);
 
       } finally {
@@ -180,11 +157,6 @@ export default {
         ...this.add,
         url: this.$urls.api + "/" + this.add.api
       });
-    },
-    uploaded() {
-      this.$events.$emit("file.create");
-      this.$events.$emit("model.update");
-      this.$store.dispatch("notification/success", ":)");
     }
   }
 };

@@ -1,9 +1,5 @@
 <template>
-  <section
-    v-if="isLoading === false"
-    :data-processing="isProcessing"
-    class="k-pages-section"
-  >
+  <section class="k-pages-section" :data-processing="isProcessing">
     <header class="k-section-header">
       <k-headline :link="options.link">
         {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
@@ -16,28 +12,17 @@
       </k-button-group>
     </header>
 
-    <template v-if="error">
-      <k-box theme="negative">
-        <k-text size="small">
-          <strong>
-            {{ $t("error.section.notLoaded", { name: name }) }}:
-          </strong>
-          {{ error }}
-        </k-text>
-      </k-box>
-    </template>
-
-    <template v-else>
+    <template>
       <k-collection
         v-if="data.length"
         :layout="options.layout"
         :help="help"
-        :items="data"
+        :items="items(data)"
         :pagination="pagination"
-        :sortable="!isProcessing && options.sortable"
+        :sortable="options.sortable"
         :size="options.size"
         :data-invalid="isInvalid"
-        @change="sort"
+        @sort="sort"
         @paginate="paginate"
       />
 
@@ -74,15 +59,6 @@ export default {
     add() {
       return this.options.add && this.$permissions.pages.create;
     }
-  },
-  created() {
-    this.load();
-    this.$events.$on("page.changeStatus", this.reload);
-    this.$events.$on("page.sort", this.reload);
-  },
-  destroyed() {
-    this.$events.$off("page.changeStatus", this.reload);
-    this.$events.$off("page.sort", this.reload);
   },
   methods: {
     create() {
@@ -130,44 +106,24 @@ export default {
         return page;
       });
     },
-    async sort(event) {
-      let type = null;
+    async sort(items, event) {
+      this.isProcessing = true;
 
-      if (event.added) {
-        type = "added";
+      const item     = items[event.oldIndex];
+      const position = event.newIndex + 1 + this.pagination.offset;
+
+      try {
+        await this.$api.pages.status(item.id, "listed", position);
+        this.$store.dispatch("notification/success", ":)");
+      } catch (error) {
+        this.$store.dispatch("notification/error", {
+          message: error.message,
+          details: error.details
+        });
+      } finally {
+        this.isProcessing = false;
+        this.$reload();
       }
-
-      if (event.moved) {
-        type = "moved";
-      }
-
-      if (type) {
-        this.isProcessing = true;
-
-        const element = event[type].element;
-        const position = event[type].newIndex + 1 + this.pagination.offset;
-
-        try {
-          await this.$api.pages.status(element.id, "listed", position);
-          this.$store.dispatch("notification/success", ":)");
-          this.$events.$emit("page.sort", element);
-
-        } catch (error) {
-          this.$store.dispatch("notification/error", {
-            message: error.message,
-            details: error.details
-          });
-
-          await this.reload();
-
-        } finally {
-          this.isProcessing = false;
-        }
-      }
-    },
-    update() {
-      this.reload();
-      this.$events.$emit("model.update");
     }
   }
 };
