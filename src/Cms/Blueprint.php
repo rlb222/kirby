@@ -770,11 +770,19 @@ class Blueprint
      */
     public function tab(?string $name = null): ?array
     {
-        if ($name === null) {
-            return A::first($this->tabs);
+        $tab = $name === null ? A::first($this->tabs) : $this->tabs[$name];
+
+        if ($tab === null) {
+            return null;
         }
 
-        return $this->tabs[$name] ?? null;
+        foreach ($tab['columns'] as $columnIndex => $column) {
+            foreach ($column['sections'] as $sectionIndex => $section) {
+                $tab['columns'][$columnIndex]['sections'][$sectionIndex] = $this->section($sectionIndex)->toResponse();
+            }
+        }
+
+        return $tab;
     }
 
     /**
