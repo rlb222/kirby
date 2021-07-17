@@ -14,6 +14,9 @@
 </template>
 
 <script>
+/**
+ * Page status icon
+ */
 export default {
   props: {
     click: {

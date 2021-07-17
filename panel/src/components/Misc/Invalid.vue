@@ -1,3 +1,10 @@
+<script>
+/**
+ * @internal
+ */
+export default {}
+</script>
+
 <style>
 [data-invalid] {
   border: 1px solid var(--color-negative-outline);

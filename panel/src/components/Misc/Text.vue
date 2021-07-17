@@ -68,7 +68,7 @@ export default {
   text-align: center;
 }
 /**
-* @todo: Remove right in 4.0.0
+* @todo: Remove "right" in 4.0.0
 */
 .k-text[data-align="right"],
 .k-text[data-align="end"] {

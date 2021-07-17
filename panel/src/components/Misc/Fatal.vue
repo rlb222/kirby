@@ -19,6 +19,9 @@
 </template>
 
 <script>
+/**
+ * @internal
+ */
 export default {
   computed: {
     fatal() {
