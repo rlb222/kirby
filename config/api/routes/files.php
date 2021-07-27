@@ -36,6 +36,9 @@ return [
         'action'  => function (string $path) {
             return $this->upload(function ($source, $filename) use ($path) {
                 return $this->parent($path)->createFile([
+                    'content' => [
+                        'sort' => $this->requestBody('sort'),
+                    ],
                     'source'   => $source,
                     'template' => $this->requestBody('template'),
                     'filename' => $filename
