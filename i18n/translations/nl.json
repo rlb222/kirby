@@ -253,10 +253,10 @@
 
   "field.files.empty": "Nog geen bestanden geselecteerd",
 
-  "field.layout.delete": "Verwijder indeling",
-  "field.layout.delete.confirm": "Weet je zeker dat je deze indeling wilt verwijderen?",
+  "field.layout.delete": "Verwijder layout",
+  "field.layout.delete.confirm": "Weet je zeker dat je deze layout wilt verwijderen?",
   "field.layout.empty": "Er zijn nog geen rijen",
-  "field.layout.select": "Selecteer een indeling",
+  "field.layout.select": "Selecteer een layout",
 
   "field.pages.empty": "Nog geen pagina's geselecteerd",
   "field.structure.delete.confirm": "Wil je deze entry verwijderen?",
